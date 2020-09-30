@@ -10,6 +10,24 @@ const userSchema = new Schema({
         required: true,
         max: 32
     },
+    firstName: {
+        type: String,
+        trim: true,
+        required: true,
+        max: 32
+    },
+    middleName: {
+        type: String,
+        trim: true,
+        required: true,
+        max: 32
+    },
+    lastName: {
+        type: String,
+        trim: true,
+        required: true,
+        max: 32
+    },
     email: {
         type: String,
         trim: true,
@@ -17,18 +35,41 @@ const userSchema = new Schema({
         unique: true,
         lowercase: true
     },
+    phoneNumber: {
+        type: Number,
+        required: true
+    },
     hashed_password: {
         type: String,
         required: true
     },
+    gender: {
+        type: String
+    },
+    nationality: {
+        type: String
+    },
+    birthDate: {
+        type: Date
+    },
     salt: String,
     role: {
         type: String,
-        default: 'subscriber'
+        default: 'customer'
     },
     reset_password_link: {
         data: String,
         default: ''
+    },
+    isRestricted: {
+        type: Boolean
+    },
+    isAdmin: {
+        type: Boolean
+    },
+    isActive: {
+        type: Boolean,
+        default: false
     }
 },
     {
@@ -47,6 +88,8 @@ userSchema.virtual('password')
     .get(function () {
         return this._password
     })
+
+
 //methods 
 userSchema.methods = {
     authenticate: function (plainText) {

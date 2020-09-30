@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 //import controller 
-const { signup, accountActivation, signin } = require('../controllers/auth')
+const { signup, accountActivation, signin } = require('../controllers/userController')
 
 //import validator 
-const { userSignupValidator, userSigninValidator } = require('../validators/auth')
-const { runValidation } = require('../validators')
+const { userSignupValidator, userSigninValidator } = require('../middlewares/validators/validateUser')
+const { runValidation } = require('../middlewares/validators')
 
 //register or signup 
 router.post('/signup', userSignupValidator, runValidation, signup)

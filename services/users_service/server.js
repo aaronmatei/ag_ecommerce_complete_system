@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const connectDB = require('./config/db')
+import connectDB from './config/db'
 
 const app = express()
 
@@ -27,7 +27,7 @@ app.use(cors({ origin: `http://localhost:3000` }))
 
 
 // Define Routes
-const authRoutes = require('./routes/api/auth')
+const authRoutes = require('./routes/api/users')
 app.use('/api/v1/users', authRoutes);
 
 

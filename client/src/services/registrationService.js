@@ -1,13 +1,10 @@
 import axios from 'axios'
-import bcrypt from 'bcryptjs'
 
 export const UserRegistration = data => {
-    const password = data.password
-    const salt = bcrypt.genSaltSync(10)
-    const hash = bcrypt.hashSync(password, salt)
-    data["password"] = hash
 
-    return axios.post("http://localhost:5000/api/v1/users/register", data)
+    return axios
+        .post(`${process.env.REACT_APP_API}/users/signup`, data)
         .then(res => res.status)
+        .catch(err => err.message)
 }
 

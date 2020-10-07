@@ -4,7 +4,7 @@
   "description": "backend for devscorner",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon -r esm server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "aaronmatei",
@@ -16,6 +16,7 @@
     "config": "^3.3.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-validator": "^6.6.0",

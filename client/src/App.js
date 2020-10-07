@@ -8,6 +8,7 @@ import Layout from './components/layout';
 //pages 
 import Signin from './components/pages/auth/SignIn'
 import Signup from './components/pages/auth/SignUp'
+import Activate from './components/pages/auth/Activate';
 
 
 
@@ -20,7 +21,7 @@ function App() {
             <Route exact path='/' component={Home} />
             <Route exact path='/signup' component={Signup} />
             <Route exact path='/signin' component={Signin} />
-            <Route exact path='/login' component={Home} />
+            <Route exact path='/auth/activate/:token' component={Activate} />
           </Switch>
         </Layout>
       </BrowserRouter>

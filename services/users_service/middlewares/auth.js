@@ -15,7 +15,7 @@ const auth = (req, res, next) => {
     }
     try {
         // verify the token 
-        const decoded = jwt.verify(token, config)
+        const decoded = jwt.verify(token, config.get("jwtSecret"))
         req.user = decoded
 
         if (user.isRestricted) {

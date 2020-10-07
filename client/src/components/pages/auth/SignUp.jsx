@@ -53,17 +53,21 @@ function Copyright() {
     );
 }
 
-export default function SignIn() {
+export default function SignUp() {
     const [values, setValues] = useState({
         username: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        phoneNumber: "",
         email: "",
         password: "",
-        password2: "",
+        confirm_password: "",
         error: "",
         buttonText: "Submit"
     })
 
-    const { username, email, password, password2, buttonText } = values
+    const { username, firstName, middleName, lastName, phoneNumber, email, password, confirm_password, buttonText } = values
 
 
     const handleInputChange = (name) => (event) => {
@@ -76,17 +80,17 @@ export default function SignIn() {
         axios({
             method: 'POST',
             url: `${process.env.REACT_APP_API}/users/signup`,
-            data: { username, email, password }
+            data: { username, firstName, middleName, lastName, phoneNumber, email, password, confirm_password }
         })
             .then(res => {
                 console.log('SIGN UP SUCCESS', res)
-                setValues({ ...values, username: "", email: "", password: "", password2: "", buttonText: "Submitted" })
+                setValues({ ...values, username: "", firstName: "", middleName: "", lastName: "", phoneNumber: "", email: "", password: "", confirm_password: "", buttonText: "Submitted" })
                 toast.success(res.data.message)
             })
             .catch(err => {
                 console.log('SIGN UP ERROR', err.response.data)
                 setValues({ ...values, buttonText: 'Submit' })
-                toast.error(err.response.data.error)
+                toast.error(err.response.data.message)
             })
 
     }
@@ -107,6 +111,59 @@ export default function SignIn() {
                 autoFocus
             />
             <TextField
+                onChange={handleInputChange('firstName')}
+                value={firstName}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="firstName"
+                label="First Name"
+                name="firstName"
+                autoComplete="First Name"
+                autoFocus
+            />
+            <TextField
+                onChange={handleInputChange('middleName')}
+                value={middleName}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="middleName"
+                label="Middle Name"
+                name="middleName"
+                autoComplete="Middle Name"
+                autoFocus
+            />
+            <TextField
+                onChange={handleInputChange('lastName')}
+                value={lastName}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="lastName"
+                autoComplete="Last Name"
+                autoFocus
+            />
+            <TextField
+                onChange={handleInputChange('phoneNumber')}
+                value={phoneNumber}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="phoneNumber"
+                label="Phone Number"
+                name="phoneNumber"
+                autoComplete="Phone Number"
+                autoFocus
+            />
+
+            <TextField
                 onChange={handleInputChange('email')}
                 value={email}
                 variant="outlined"
@@ -119,6 +176,8 @@ export default function SignIn() {
                 autoComplete="email"
                 autoFocus
             />
+
+
             <TextField
                 onChange={handleInputChange('password')}
                 value={password}
@@ -132,17 +191,18 @@ export default function SignIn() {
                 id="password"
                 autoComplete="current-password"
             />
+
             <TextField
-                onChange={handleInputChange('password2')}
-                value={password2}
+                onChange={handleInputChange('confirm_password')}
+                value={confirm_password}
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                name="password2"
+                name="confirm_password"
                 label="Confirm Password"
                 type="password"
-                id="password2"
+                id="confirm_password"
                 autoComplete="confirm-password"
             />
 
@@ -173,7 +233,16 @@ export default function SignIn() {
 
             <CssBaseline />
             <ToastContainer />
-            {JSON.stringify({ username, email, password, password2 })}
+            {JSON.stringify({
+                username,
+                firstName,
+                middleName,
+                lastName,
+                phoneNumber,
+                email,
+                password,
+                confirm_password
+            })}
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlined />

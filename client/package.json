@@ -5,17 +5,23 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@sweetalert/with-react": "^0.1.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "antd": "^4.6.6",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.5.0",
+    "jsonwebtoken": "^8.5.1",
     "react": "^16.13.1",
+    "react-bootstrap-sweetalert": "^5.2.0",
     "react-dom": "^16.13.1",
+    "react-loader-spinner": "^3.1.14",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "react-toastify": "^6.0.8"
+    "react-toastify": "^6.0.8",
+    "sweetalert": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

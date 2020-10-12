@@ -50,7 +50,8 @@ const userSchema = new Schema({
         type: String
     },
     birthDate: {
-        type: Date
+        type: Date,
+        default: null
     },
 
     role: {

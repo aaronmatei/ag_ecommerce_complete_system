@@ -2,43 +2,47 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { fade, makeStyles, useTheme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import clsx from "clsx";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import { MenuList, Collapse, Slide, useScrollTrigger } from "@material-ui/core";
-import { blueGrey, blue, green } from '@material-ui/core/colors';
-import DashboardRoundedIcon from "@material-ui/icons/DashboardRounded";
-import GroupAddSharpIcon from "@material-ui/icons/GroupAddSharp";
-import PermContactCalendarRoundedIcon from "@material-ui/icons/PermContactCalendarRounded";
-import MonetizationOnSharpIcon from "@material-ui/icons/MonetizationOnSharp";
-import AttachMoneyRoundedIcon from "@material-ui/icons/AttachMoneyRounded";
-import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
-import PollRoundedIcon from "@material-ui/icons/PollRounded";
-import ShoppingCartRoundedIcon from "@material-ui/icons/ShoppingCartRounded";
-import ShoppingBasketRoundedIcon from "@material-ui/icons/ShoppingBasketRounded";
 import {
+    AppBar,
+    Toolbar,
+    IconButton,
+    Typography,
+    InputBase,
+    Badge,
+    MenuItem,
+    Menu,
+    ListItem,
+    Drawer,
+    CssBaseline,
+    Divider,
+    ListItemIcon,
+    ListItemText,
+    MenuList,
+    Collapse,
+    Slide,
+    useScrollTrigger
+} from "@material-ui/core";
+
+import MenuIcon from "@material-ui/icons/Menu"
+
+import {
+    Search,
+    AccountCircle,
+    Mail,
+    Notifications,
+    More,
+    ChevronLeft,
+    ChevronRight,
+    Inbox,
+    DashboardRounded,
+    GroupAddSharp,
+    PermContactCalendarRounded,
+    MonetizationOnSharp,
+    AttachMoneyRounded,
+    AssignmentRounded,
+    PollRounded,
+    ShoppingBasketRounded,
+    ShoppingCartRounded,
     ExpandMore,
     ExpandLess,
     PersonRounded,
@@ -48,6 +52,14 @@ import {
     SupervisedUserCircleRounded,
     AccountBox,
 } from "@material-ui/icons";
+
+import clsx from "clsx";
+import { blueGrey, blue, green } from '@material-ui/core/colors';
+import { isAuth, signout, authenticate } from '../pages/auth/helpers';
+
+
+
+
 
 const drawerWidth = 240;
 const drawerbg = blueGrey[900];
@@ -249,9 +261,9 @@ export default function Layout(props) {
         </Typography>
                 <IconButton onClick={handleDrawerClose}>
                     {theme.direction === "rtl" ? (
-                        <ChevronRightIcon />
+                        <ChevronRight />
                     ) : (
-                            <ChevronLeftIcon />
+                            <ChevronLeft />
                         )}
                 </IconButton>
             </div>
@@ -266,7 +278,7 @@ export default function Layout(props) {
                     onClick={(event) => handleListItemClick(event, 0)}
                 >
                     <ListItemIcon>
-                        <DashboardRoundedIcon className={classes.menuItem} />
+                        <DashboardRounded className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Dashboard" />
                 </MenuItem>
@@ -277,7 +289,7 @@ export default function Layout(props) {
                     to="/users"
                 >
                     <ListItemIcon>
-                        <GroupAddSharpIcon className={classes.menuItem} />
+                        <GroupAddSharp className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="User Management" onClick={handleClick} />
                     {openCollapse ? (
@@ -318,7 +330,7 @@ export default function Layout(props) {
                     onClick={(event) => handleListItemClick(event, 2)}
                 >
                     <ListItemIcon>
-                        <PermContactCalendarRoundedIcon className={classes.menuItem} />
+                        <PermContactCalendarRounded className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Contacts" />
                 </MenuItem>
@@ -327,7 +339,7 @@ export default function Layout(props) {
                     onClick={(event) => handleListItemClick(event, 3)}
                 >
                     <ListItemIcon>
-                        <MonetizationOnSharpIcon className={classes.menuItem} />
+                        <MonetizationOnSharp className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Purchases" />
                 </MenuItem>
@@ -336,7 +348,7 @@ export default function Layout(props) {
                     onClick={(event) => handleListItemClick(event, 4)}
                 >
                     <ListItemIcon>
-                        <AttachMoneyRoundedIcon className={classes.menuItem} />
+                        <AttachMoneyRounded className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Sales" />
                 </MenuItem>
@@ -358,7 +370,7 @@ export default function Layout(props) {
                     to="/apps/ecommerce/products"
                 >
                     <ListItemIcon>
-                        <ShoppingCartRoundedIcon className={classes.menuItem} />
+                        <ShoppingCartRounded className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Ecommerce" onClick={handleClickEcommerce} />
                     {openCollapseEcommerce ? (
@@ -380,7 +392,7 @@ export default function Layout(props) {
                             className={classes.nested}
                         >
                             <ListItemIcon>
-                                <ShoppingBasketRoundedIcon className={classes.menuItem} />
+                                <ShoppingBasketRounded className={classes.menuItem} />
                             </ListItemIcon>
                             <ListItemText primary="Products" />
                         </MenuItem>
@@ -390,7 +402,7 @@ export default function Layout(props) {
                             className={classes.nested}
                         >
                             <ListItemIcon>
-                                <ShoppingBasketRoundedIcon className={classes.menuItem} />
+                                <ShoppingBasketRounded className={classes.menuItem} />
                             </ListItemIcon>
                             <ListItemText primary="Invoices" />
                         </MenuItem>
@@ -421,7 +433,7 @@ export default function Layout(props) {
                     onClick={(event) => handleListItemClick(event, 7)}
                 >
                     <ListItemIcon>
-                        <AssignmentRoundedIcon className={classes.menuItem} />
+                        <AssignmentRounded className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Inventory" />
                 </MenuItem>
@@ -430,7 +442,7 @@ export default function Layout(props) {
                     onClick={(event) => handleListItemClick(event, 8)}
                 >
                     <ListItemIcon>
-                        <PollRoundedIcon className={classes.menuItem} />
+                        <PollRounded className={classes.menuItem} />
                     </ListItemIcon>
                     <ListItemText primary="Reports" />
                 </MenuItem>
@@ -440,7 +452,7 @@ export default function Layout(props) {
                 {["HR", "Taxes", "Settings"].map((text, index) => (
                     <MenuItem button key={text}>
                         <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            {index % 2 === 0 ? <Inbox /> : <Mail />}
                         </ListItemIcon>
                         <ListItemText primary={text} />
                     </MenuItem>
@@ -449,9 +461,28 @@ export default function Layout(props) {
         </Drawer>
     );
 
-    const { children } = props;
+    const { children, history, match } = props;
+
+
+    const isActive = path => {
+        if (history.location.path === path) {
+            return {
+                color: '#000'
+            }
+        } else {
+            return {
+                color: '#fff'
+            }
+
+        }
+    }
+
+
+
+
+
     const menuId = "primary-search-account-menu";
-    const renderMenu = (
+    const renderMenu = (props) => (
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -461,9 +492,10 @@ export default function Layout(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onCLick={handleMenuClose} component={Link} to="/signup">sign up</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to="/signin">sign in</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            {!isAuth() && <MenuItem onCLick={handleMenuClose} component={Link} to="/signup" >sign up</MenuItem>}
+            {!isAuth() && <MenuItem onClick={handleMenuClose} component={Link} to="/signin" >Sign in</MenuItem>}
+            {isAuth() && <MenuItem onClick={() => { handleMenuClose(); signout(); }} component={Link} to="/">Sign out</MenuItem>}
+            {isAuth() && <MenuItem onClick={handleMenuClose} component={Link} to={`/auth/user/user_info/${isAuth().id}`}>Profile</MenuItem>}
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
         </Menu>
     );
@@ -483,7 +515,7 @@ export default function Layout(props) {
             <MenuItem>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
+                        <Mail />
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
@@ -491,7 +523,7 @@ export default function Layout(props) {
             <MenuItem>
                 <IconButton aria-label="show 11 new notifications" color="inherit">
                     <Badge badgeContent={11} color="secondary">
-                        <NotificationsIcon />
+                        <Notifications />
                     </Badge>
                 </IconButton>
                 <p>Notifications</p>
@@ -504,6 +536,7 @@ export default function Layout(props) {
                     color="inherit"
                 >
                     <AccountCircle />
+
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
@@ -529,11 +562,11 @@ export default function Layout(props) {
                     <MenuIcon />
                 </IconButton>
                 <Typography className={classes.title} variant="h6" noWrap>
-                    DevsCorner
-        </Typography>
+                    Ecommerce
+                </Typography>
                 <div className={classes.search}>
                     <div className={classes.searchIcon}>
-                        <SearchIcon />
+                        <Search />
                     </div>
                     <InputBase
                         placeholder="Search…"
@@ -549,12 +582,12 @@ export default function Layout(props) {
 
                     <IconButton aria-label="show 4 new mails" color="inherit">
                         <Badge badgeContent={4} color="secondary">
-                            <MailIcon />
+                            <Mail />
                         </Badge>
                     </IconButton>
                     <IconButton aria-label="show 17 new notifications" color="inherit">
                         <Badge badgeContent={17} color="secondary">
-                            <NotificationsIcon />
+                            <Notifications />
                         </Badge>
                     </IconButton>
                     <IconButton
@@ -566,6 +599,8 @@ export default function Layout(props) {
                         color="inherit"
                     >
                         <AccountCircle />
+                        {isAuth() && isAuth().username}
+
                     </IconButton>
                 </div>
                 <div className={classes.sectionMobile}>
@@ -576,7 +611,7 @@ export default function Layout(props) {
                         onClick={handleMobileMenuOpen}
                         color="inherit"
                     >
-                        <MoreIcon />
+                        <More />
                     </IconButton>
                 </div>
             </Toolbar>
@@ -611,13 +646,13 @@ export default function Layout(props) {
         <div className={classes.root}>
             <CssBaseline />
             <HideOnScroll {...props}>{renderAppBar}</HideOnScroll>
-            {renderDrawer}
+            {/* {renderDrawer} */}
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 {children}
             </main>
             {renderMobileMenu}
-            {renderMenu}
+            {renderMenu()}
         </div>
     );
 }

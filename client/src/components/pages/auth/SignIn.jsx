@@ -15,8 +15,8 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-
 import { LockOutlined } from "@material-ui/icons";
+import { authenticate } from "./helpers";
 
 function Copyright() {
   return (
@@ -68,23 +68,30 @@ export default function SignIn(props) {
     setValues({ ...values, buttonText: "Loading.." });
     axios({
       method: "POST",
+      headers: {
+        "Authorization": "Bearer " + ""
+      },
       url: `${process.env.REACT_APP_API}/users/signin`,
       data: { email, password },
     })
       .then((res) => {
         console.log("SIGN IN SUCCESS", res);
         // save response to localstorage or cookie
-        setValues({
-          ...values,
-          email: "",
-          password: "",
-          buttonText: "Submitted",
+        // authenticate user
+        authenticate(res, () => {
+          setValues({
+            ...values,
+            email: "",
+            password: "",
+            buttonText: "Submitted",
+          });
+          toast.success(
+            `Hi ${res.data.user.username} !, You are now signed in. Welcome`
+          );
+          props.history.push("/");
         });
-        toast.success(
-          `Hi ${res.data.user.username} !, You are now signed in. Welcome`
-        );
       })
-      .then(props.history.push("/"))
+      .then()
       .catch((err) => {
         console.log("SIGN IN ERROR", err.response.data);
         setValues({ ...values, buttonText: "Login" });
@@ -134,8 +141,9 @@ export default function SignIn(props) {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link href="#" variant="body2">
-            Forgot password?
+          Forgot password? {" "}
+          <Link href="/auth/user/forgot_password" variant="body2">
+            Reset
           </Link>
         </Grid>
         <Grid item>

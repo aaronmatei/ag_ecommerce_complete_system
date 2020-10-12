@@ -1,10 +1,12 @@
 import jwt from "jsonwebtoken"
 import config from "config"
+import cookie from "js-cookie"
 
 const jwtSecret = config.get("jwtSecret")
 
 const auth = (req, res, next) => {
-    const token = req.header("x-auth-token")
+    // const token = req.header("x-auth-token")
+    const token = req.token
     // check token 
     if (!token) {
         return res
@@ -15,10 +17,10 @@ const auth = (req, res, next) => {
     }
     try {
         // verify the token 
-        const decoded = jwt.verify(token, config.get("jwtSecret"))
+        const decoded = jwt.verify(token, jwtSecret)
         req.user = decoded
 
-        if (user.isRestricted) {
+        if (req.user.isRestricted) {
             return res
                 .status(401)
                 .json({

@@ -84,3 +84,27 @@ exports.userEditValidator = [
 
 
 ]
+
+exports.userForgotPasswordValidator = [
+    check('email')
+        .isEmail()
+        .withMessage('Email not valid.')
+        .not()
+        .isEmpty()
+        .withMessage('Email is required')
+]
+
+exports.userResetPasswordValidator = [
+    check('newPassword')
+        .not()
+        .isEmpty()
+        .withMessage("Please enter a value")
+        .isLength({ min: 8 })
+        .withMessage('Passwords must be atleast 8 characters'),
+    check('confirmNewPassword')
+        .not()
+        .isEmpty()
+        .withMessage("Please enter a value")
+        .isLength({ min: 8 })
+        .withMessage('Passwords must be atleast 8 characters')
+]

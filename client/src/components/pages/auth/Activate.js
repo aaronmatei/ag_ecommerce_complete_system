@@ -2,14 +2,9 @@ import React, { useState, useEffect } from "react";
 import jwt from "jsonwebtoken";
 import { Alert } from "antd";
 import {
-    Avatar,
-    Button,
+
     CssBaseline,
-    TextField,
-    FormControlLabel,
-    Checkbox,
     Link,
-    Grid,
     Box,
     Typography,
     makeStyles,
@@ -109,6 +104,7 @@ export default function Activate(props) {
                 console.log("ACCOUNT ACTIVATION SUCCESS", res);
                 setValues({ ...values, loading: false, error: "" });
                 toast.success(res.data.message);
+                props.history.push("/signin")
 
             })
             .catch((err) => {
@@ -116,6 +112,7 @@ export default function Activate(props) {
                     console.log("ACCOUNT ACTIVATION ERROR", err.response.data);
                     setValues({ ...values, isActive: false, error: err.response.data.error });
                     toast.error(err.response.data.error);
+                    props.history.push("/signup")
                 }
 
 
@@ -129,8 +126,8 @@ export default function Activate(props) {
             <>
 
                 { loading && showLoader()}
-                {!loading && !error && showSuccessAlert()}
-                {!loading && error && showErrorAlert()}
+                {/* {!loading && !error && showSuccessAlert()} */}
+                {/* {!loading && !error && showErrorAlert()} */}
             </>
 
             <Box mt={8}>

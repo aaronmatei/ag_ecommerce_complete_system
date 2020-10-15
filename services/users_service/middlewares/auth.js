@@ -5,14 +5,13 @@ import cookie from "js-cookie"
 const jwtSecret = config.get("jwtSecret")
 
 const auth = (req, res, next) => {
-    // const token = req.header("x-auth-token")
-    const token = req.token
+    const token = req.header("x-auth-token")
     // check token 
     if (!token) {
         return res
             .status(403)
             .json({
-                message: "Authorization denied, please login"
+                error: "Authorization denied, please login"
             })
     }
     try {

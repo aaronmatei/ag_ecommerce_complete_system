@@ -1,28 +1,29 @@
 const { User } = require("../models/User");
 const jwt = require("jsonwebtoken");
-const _ = require("lodash")
+const _ = require("lodash");
 const config = require("config");
 const sendgridMail = require("@sendgrid/mail");
 const jwtSecret = config.get("jwtSecret");
 const bcrypt = require("bcryptjs");
+const { OAuth2Client } = require("google-auth-library");
+const { response } = require("express");
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 
 // hande GET at /api/v1/users/all_users
 exports.fetchAllUsers = async (req, res) => {
-    await User.find({}, '-password').exec((err, foundUsers) => {
+    await User.find({}, "-password").exec((err, foundUsers) => {
         if (err) {
             res.status(400).json({
                 message: "Could not fetch users",
-                error: err.message
-            })
+                error: err.message,
+            });
         } else {
             res.status(200).json({
-                users: foundUsers
-            })
+                users: foundUsers,
+            });
         }
-    })
-}
+    });
+};
 
 // hande GET at /api/v1/users/user_info/:id
 exports.getUser = async (req, res) => {
@@ -49,7 +50,16 @@ exports.getUser = async (req, res) => {
 
 // handle POST at /api/v1/users/signup
 exports.signup = async (req, res) => {
-    const { username, firstName, middleName, lastName, email, phoneNumber, password, confirm_password } = req.body;
+    const {
+        username,
+        firstName,
+        middleName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
+        confirm_password,
+    } = req.body;
 
     // new user will be
     const newUser = new User({
@@ -59,10 +69,10 @@ exports.signup = async (req, res) => {
         lastName,
         email,
         phoneNumber,
-        password
+        password,
     });
 
-    const signUpToken = generateNewToken(newUser)
+    const signUpToken = generateNewToken(newUser);
 
     // generate new token
     function generateNewToken(user) {
@@ -145,11 +155,12 @@ exports.signup = async (req, res) => {
                 newUser
                     .save()
                     .then((user) => {
-                        sendAccountActivationEmail(user)
+                        sendAccountActivationEmail(user);
                     })
                     .catch((err) => {
                         res.status(400).json({
-                            message: "Something went wrong while registering. Please try again later",
+                            message:
+                                "Something went wrong while registering. Please try again later",
                             error: err,
                         });
                     });
@@ -184,9 +195,8 @@ exports.signup = async (req, res) => {
                         username,
                         email,
                         role,
-                    }
-                })
-
+                    },
+                });
             })
             .catch((err) => {
                 return res.status(400).json({
@@ -290,8 +300,7 @@ exports.signin = async (req, res) => {
                             error: err.message,
                         });
                     } else {
-                        req.token = token;
-                        res.header("x-auth-token", token).status(200).json({
+                        res.status(200).json({
                             token,
                             message: "Sign in was successful",
                             user: { token, id, username, email, role },
@@ -323,7 +332,6 @@ exports.editUser = async (req, res) => {
                         error: err.message,
                     });
                 } else {
-                    console.log("USER TO UPDATEEE", user)
                     res.status(200).json({
                         token,
                         message: "User information updated successfully",
@@ -367,8 +375,6 @@ exports.editUser = async (req, res) => {
                     ? req.body.birthDate
                     : userToUpdate.birthDate,
             };
-            console.log("INITIAL USER", userToUpdate);
-            console.log("REQ BODY", req.body);
 
             // check email to avoid duplicates
             if (userToUpdate.email === req.body.email) {
@@ -495,14 +501,10 @@ exports.editUser = async (req, res) => {
                                                                 updatedUser.password = hash;
 
                                                                 // update user
-                                                                User.findByIdAndUpdate(
-                                                                    id,
-                                                                    updatedUser,
-                                                                    {
-                                                                        new: true,
-                                                                        useFindAndModify: false,
-                                                                    }
-                                                                )
+                                                                User.findByIdAndUpdate(id, updatedUser, {
+                                                                    new: true,
+                                                                    useFindAndModify: false,
+                                                                })
                                                                     .select("-password")
                                                                     .then((user) => {
                                                                         generateUserUpdatedToken(user);
@@ -578,7 +580,7 @@ exports.forgotPassword = async (req, res) => {
                         error: err.message,
                     });
                 } else if (token) {
-                    sendResetPasswordEmail(token)
+                    sendResetPasswordEmail(token);
                 }
             }
         );
@@ -609,7 +611,7 @@ exports.forgotPassword = async (req, res) => {
             .catch((err) => {
                 return res.status(400).json({
                     message: "Could not send email for you to reset password",
-                    error: err.message
+                    error: err.message,
                 });
             });
     }
@@ -627,11 +629,11 @@ exports.forgotPassword = async (req, res) => {
 
 // handle PUT at /api/users/reset_password/:token
 exports.resetPassword = async (req, res) => {
-    let token = req.params.token
-    console.log("TOKENN", token)
-    const { newPassword, confirmNewPassword } = req.body
+    let token = req.params.token;
+    console.log("TOKENN", token);
+    const { newPassword, confirmNewPassword } = req.body;
 
-    verifyUserPassword()
+    verifyUserPassword();
 
     // verify the 2 passwords in UI
     function verifyUserPassword() {
@@ -644,53 +646,47 @@ exports.resetPassword = async (req, res) => {
         }
     }
 
-    // verify token 
+    // verify token
     function encryptPasswordsAndSave() {
         jwt.verify(token, jwtSecret, (err, decoded) => {
             if (err) {
-                console.log("TOKEN", token)
+                console.log("TOKEN", token);
                 res.status(400).json({
                     error: "Reset password link expired. Try again",
-                })
+                });
             } else if (decoded) {
-                console.log("TOKENNN", token)
-                const { id } = jwt.decode(token)
+                console.log("TOKENNN", token);
+                const { id } = jwt.decode(token);
 
-                // encrypt newPassword 
+                // encrypt newPassword
                 // generate hashed password
                 bcrypt.genSalt(10, (err, salt) => {
                     if (err) throw err;
-                    bcrypt.hash(
-                        newPassword,
-                        salt,
-                        (err, hash) => {
-                            if (err) throw err;
+                    bcrypt.hash(newPassword, salt, (err, hash) => {
+                        if (err) throw err;
 
-                            // update user
-                            // updatedFields = {
-                            //     password: hash
-                            // }
-                            // user = _.extend(user, updatedFields)
+                        // update user
+                        // updatedFields = {
+                        //     password: hash
+                        // }
+                        // user = _.extend(user, updatedFields)
 
-                            User.findByIdAndUpdate(
-                                id,
-                                { password: hash },
-                                {
-                                    new: true,
-                                    useFindAndModify: false,
-                                }
-                            )
-                                .select("-password")
-                                .then((user) => {
-                                    generateResetPasswordToken(user);
-                                });
-                        }
-                    );
-
+                        User.findByIdAndUpdate(
+                            id,
+                            { password: hash },
+                            {
+                                new: true,
+                                useFindAndModify: false,
+                            }
+                        )
+                            .select("-password")
+                            .then((user) => {
+                                generateResetPasswordToken(user);
+                            });
+                    });
                 });
-
             }
-        })
+        });
     }
 
     // generate new token and send it with user
@@ -712,12 +708,127 @@ exports.resetPassword = async (req, res) => {
                     });
                 } else if (token) {
                     res.status(200).json({
-                        message: "Password has been reset successfully. Login using new password",
-                        newUser: user
-                    })
+                        message:
+                            "Password has been reset successfully. Login using new password",
+                        newUser: user,
+                    });
                 }
             }
         );
     }
+};
 
+// handle request at /api/v1/users/google_login
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+exports.googleLogin = (req, res) => {
+    // encrypt password
+    function encryptPass(plainPassword) {
+        return plainPassword;
+    }
+
+    const { idToken } = req.body;
+    client
+        .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
+        .then((response) => {
+            const { email_verified, name, email } = response.payload;
+            if (email_verified) {
+                User.findOne({ email }).exec((err, user) => {
+                    if (!err && user) {
+                        const token = jwt.sign({ id: user._id }, jwtSecret, {
+                            expiresIn: "7d",
+                        });
+                        const { _id, email, username, role } = user;
+                        return res.status(200).json({
+                            token,
+                            user: { id: _id, username, email, role },
+                        });
+                    } else {
+                        let password = email + jwtSecret;
+                        bcrypt.genSalt(10, password, (err, hash) => {
+                            if (err) throw error;
+                            password = hash;
+                            user = new User({ username: name, email, password });
+                            user.save((err, data) => {
+                                if (err) {
+                                    console.log("ERROR GOOGLE LOGIN ON USER SAVE", err);
+                                    return res.status(400).json({
+                                        error: "User signup failed with google",
+                                    });
+                                } else {
+                                    const token = jwt.sign({ id: data._id }, jwtSecret, {
+                                        expiresIn: "7d",
+                                    });
+                                    const { _id, email, username, role } = user;
+                                    return res.status(200).json({
+                                        token,
+                                        user: { id: _id, email, username, role },
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            } else {
+                return res.status(400).json({
+                    error: "Google signin failed. Please try again later",
+                });
+            }
+        });
+};
+
+// handle request at /api/v1/users/facebook_login
+exports.facebookLogin = (req, res) => {
+    console.log("FACEBOOK LOGIN REQ BODY", req.body);
+    const { userID, accessToken } = req.body;
+    const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+    return fetch(url, {
+        method: "GET",
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            const { email, name } = response;
+            User.findOne({ email }).exec((err, user) => {
+                if (!err && user) {
+                    const token = jwt.sign({ id: user._id }, jwtSecret, {
+                        expiresIn: "7d",
+                    });
+                    const { _id, email, username, role } = user;
+                    return res.status(200).json({
+                        token,
+                        user: { id: _id, email, username, role },
+                    });
+                } else {
+                    let password = email + jwtSecret;
+                    bcrypt.genSalt(10, password, (err, hash) => {
+                        if (err) throw error;
+                        password = hash;
+                        user = new User({ username: name, email, password });
+                        user.save((err, data) => {
+                            if (err) {
+                                console.log("ERROR FACEBOOK LOGIN ON USER SAVE", err);
+                                return res.status(400).json({
+                                    error: "User signup with facebook failed",
+                                });
+                            } else {
+                                const token = jwt.sign({ id: data._id }, jwtSecret, {
+                                    expiresIn: "7d",
+                                });
+                                const { _id, email, username, role } = user;
+                                return res.status(200).json({
+                                    token,
+                                    user: { id: _id, email, username, role },
+                                });
+                            }
+                        });
+                    });
+
+                }
+            });
+        })
+        .catch((err) => {
+            res.status(400).json({
+                error: "Facebook login failed. Try again",
+            });
+        });
 };

@@ -1,4 +1,5 @@
 import cookie from "js-cookie"
+import axios from "axios"
 
 // set cookie 
 export const setCookie = (key, value) => {
@@ -52,6 +53,7 @@ export const authenticate = (response, next) => {
     console.log('AUTHENTICATE HELPER ON SINGIN RESPONSE', response)
     setCookie('token', response.data.token)
     setLocalStorage('user', response.data.user)
+    axios.defaults.headers.common["x-auth-token"] = response.data.token
     next()
 
 }
@@ -78,5 +80,6 @@ export const isAuth = () => {
 export const signout = (next) => {
     removeCookie('token')
     removeLocalStorage("user")
+    delete axios.defaults.headers.common["x-auth-token"]
     next()
 }

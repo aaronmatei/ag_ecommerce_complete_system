@@ -17,6 +17,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { LockOutlined } from "@material-ui/icons";
 import { authenticate } from "./helpers";
+import GoogleSignIn from "./Google"
+import FacebookLogin from "./Facebook"
 
 function Copyright() {
   return (
@@ -63,14 +65,30 @@ export default function SignIn(props) {
     setValues({ ...values, [name]: event.target.value });
   };
 
+  const informParent = res => {
+    // authenticate user
+    authenticate(res, () => {
+      setValues({
+        ...values,
+        email: "",
+        password: "",
+        buttonText: "LOGGED IN",
+      });
+      toast.success(
+        `Hi ${res.data.user.username} !, You are now signed in. Welcome`
+      );
+      props.history.push("/");
+    });
+
+  }
+
+
+
   const siginSubmit = (e) => {
     e.preventDefault();
     setValues({ ...values, buttonText: "Loading.." });
     axios({
       method: "POST",
-      headers: {
-        "Authorization": "Bearer " + ""
-      },
       url: `${process.env.REACT_APP_API}/users/signin`,
       data: { email, password },
     })
@@ -83,7 +101,7 @@ export default function SignIn(props) {
             ...values,
             email: "",
             password: "",
-            buttonText: "Submitted",
+            buttonText: "LOGGED IN",
           });
           toast.success(
             `Hi ${res.data.user.username} !, You are now signed in. Welcome`
@@ -129,6 +147,7 @@ export default function SignIn(props) {
         control={<Checkbox value="remember" color="primary" />}
         label="Remember me"
       />
+
       <Button
         type="submit"
         fullWidth
@@ -139,6 +158,10 @@ export default function SignIn(props) {
       >
         Sign In
       </Button>
+      <Grid container spacing={2}>
+        <Grid item xs><GoogleSignIn informParent={informParent} /></Grid>
+        <Grid item xs><FacebookLogin informParent={informParent} /></Grid>
+      </Grid>
       <Grid container>
         <Grid item xs>
           Forgot password? {" "}
@@ -163,6 +186,7 @@ export default function SignIn(props) {
         <Avatar className={classes.avatar}>
           <LockOutlined />
         </Avatar>
+
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>

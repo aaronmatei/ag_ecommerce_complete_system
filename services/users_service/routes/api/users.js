@@ -11,7 +11,9 @@ const {
     getUser,
     deleteUser,
     resetPassword,
-    forgotPassword
+    forgotPassword,
+    facebookLogin,
+    googleLogin
 } = require("../../controllers/userController");
 
 //import validator
@@ -38,7 +40,7 @@ router.get("/all_users", fetchAllUsers)
 //@route PUT /api/v1/users/edit_user/:id
 //@desc EDIT user info
 //@access: Private
-router.put("/edit_user/:id", editUser);
+router.put("/edit_user/:id", auth, editUser);
 
 //@route POST /api/v1/users/signup
 //@desc POST user info to create user
@@ -69,5 +71,15 @@ router.put("/forgot_password", userForgotPasswordValidator, runValidation, forgo
 //@desc RESET password
 //@access: Private
 router.put("/reset_password/:token", userResetPasswordValidator, runValidation, resetPassword);
+
+//@route POST /api/v1/users/google_login
+//@desc login with google
+//@access: Public
+router.post("/google_login", googleLogin);
+
+//@route POST /api/v1/users/facebook_login
+//@desc login with facebook
+//@access: Public
+router.post("/facebook_login", facebookLogin);
 
 module.exports = router;

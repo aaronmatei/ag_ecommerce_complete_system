@@ -482,7 +482,7 @@ export default function Layout(props) {
 
 
     const menuId = "primary-search-account-menu";
-    const renderMenu = (props) => (
+    const renderMenu = (
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -494,7 +494,7 @@ export default function Layout(props) {
         >
             {!isAuth() && <MenuItem onCLick={handleMenuClose} component={Link} to="/signup" >sign up</MenuItem>}
             {!isAuth() && <MenuItem onClick={handleMenuClose} component={Link} to="/signin" >Sign in</MenuItem>}
-            {isAuth() && <MenuItem onClick={() => { handleMenuClose(); signout(); }} component={Link} to="/">Sign out</MenuItem>}
+            {isAuth() && <MenuItem onClick={() => { handleMenuClose(); signout(() => { }); }} component={Link} to="/">Sign out</MenuItem>}
             {isAuth() && <MenuItem onClick={handleMenuClose} component={Link} to={`/auth/user/user_info/${isAuth().id}`}>Profile</MenuItem>}
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
         </Menu>
@@ -652,7 +652,7 @@ export default function Layout(props) {
                 {children}
             </main>
             {renderMobileMenu}
-            {renderMenu()}
+            {renderMenu}
         </div>
     );
 }
